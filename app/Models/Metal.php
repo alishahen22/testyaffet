@@ -14,6 +14,12 @@ class Metal extends Model
     ];
 
 
+    protected $hidden = [
+        'created_at' , 'updated_at'
+    ];
+
+
+
     protected $appends = ['name'];
 
 
@@ -21,7 +27,7 @@ class Metal extends Model
         if($this->metalName == 'XAU'){
             return 'GOLD';
         }elseif ($this->metalName == 'XAG'){
-            return 'SELVER';
+            return 'SILVER';
         }elseif($this->metalName == 'XPT'){
             return 'PLATINUM';
         }else{

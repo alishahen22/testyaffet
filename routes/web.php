@@ -18,11 +18,6 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
-Route::get('/price',[PriceController::class,'save_data']);
-
-Route::get('/getlastprice',[PriceController::class,'get_all']);
-
- Route::get('/historicalPrice',[PriceController::class,'historicalPrice']);
 
 
 
