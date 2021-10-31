@@ -52,6 +52,9 @@ class UserController extends Controller
                 'type' => 'greater',
                 'user_id' => $request->input('user_id'),
             ]);
+
+            return $this->returnSuccessMessage('done','201');
+
         }
 
         else
@@ -62,7 +65,10 @@ class UserController extends Controller
                 'type' => 'less' ,
                 'user_id' => $request->input('user_id'),
             ]);
-        }
+
+                return $this->returnSuccessMessage('done','201');
+
+            }
 
     }
 

@@ -1,0 +1,125 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Your super  ApplicationAPI",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/getToken": {
+            "post": {
+                "summary": "authentication with device token",
+                "description": "Login with token",
+                "requestBody": {
+                    "description": "",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "deviceToken"
+                                ],
+                                "properties": {
+                                    "deviceToken": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "hdj84t3489hdfr"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/userPrice": {
+            "post": {
+                "description": "user pass current price ( alert )",
+                "requestBody": {
+                    "description": "",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "user_id,price,metalName"
+                                ],
+                                "properties": {
+                                    "user_id": {
+                                        "type": "bigint",
+                                        "format": "bigint",
+                                        "example": "1"
+                                    },
+                                    "price": {
+                                        "type": "float",
+                                        "format": "string",
+                                        "example": "332"
+                                    },
+                                    "metalName": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "GOLD"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": ""
+                    }
+                }
+            }
+        },
+        "/api/getLastprice": {
+            "get": {
+                "description": "get last price to metal",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/histsilver": {
+            "get": {
+                "description": "call historical price of silver",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/histgold": {
+            "get": {
+                "description": "call historical price of gold",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/histplatinum": {
+            "get": {
+                "description": "call historical price of platinum",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        }
+    },
+    "security": [
+        []
+    ]
+}

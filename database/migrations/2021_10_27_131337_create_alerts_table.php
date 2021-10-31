@@ -16,7 +16,7 @@ class CreateAlertsTable extends Migration
         Schema::create('alerts', function (Blueprint $table) {
             $table->id();
             $table->enum('metalName',["GOLD","SILVER","PLATINUM"]) ;
-            $table->string('price');
+            $table->float('price');
             $table->enum('type',["greater","less"]);
             $table->unsignedBigInteger('user_id')->nullable();
             $table->foreign('user_id')->references('id')->on('users');
