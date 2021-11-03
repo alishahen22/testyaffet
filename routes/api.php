@@ -61,8 +61,7 @@ Route::get('/histsilver',[ShowController::class,'HistoricalSilver']);
 Route::get('/histplatinum',[ShowController::class,'HistoricalPlatinum']);
 
 
-
-           ////////                  User                 /////////
+Route::get('/his/{metalName}',[ShowController::class,'getPrice']);           ////////                  User                 /////////
 
 // save token from user device
 Route::post('/getToken',[UserController::class,'getToken']);

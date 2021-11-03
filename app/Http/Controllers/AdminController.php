@@ -34,6 +34,7 @@ class AdminController extends Controller
                         'metalPrice' => 1/$value ,
                         'date'=> gmdate("Y-m-d H:i:s", $timestamp)
 
+
                     ]);
                 }
             }
@@ -225,13 +226,24 @@ class AdminController extends Controller
     // send less alert to user
     public function sendLessAlert()
     {
+        /**
+         * 1- get current price
+         * 2- get saved alerts
+         * 3- check alerts with current price and send notifications
+         */
+
+
+
         $metals = alert::get();
+
+
+
         foreach ($metals as $metal)
         {
 
             // get token from gold metal
             $gold = Metal::where('metalName', 'XAU')->latest()->first();
-            if ($metal->type == 'less' and $metal->metalName == 'GOLD')
+            if ($metal->type == 'less' and $metal->metalName == 'GOLD' && $metal->price >= $gold->metalPrice)
             {
                 if ($metal->price >= $gold->metalPrice)
                 {

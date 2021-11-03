@@ -17,7 +17,7 @@ class CreateMetalsTable extends Migration
             $table->id();
 			$table->string('metalName')->nullable();
 			$table->float('metalPrice')->nullable();;
-            $table->string('date')->nullable();
+            $table->timestamp('date')->nullable();
             $table->timestamps();
         });
     }

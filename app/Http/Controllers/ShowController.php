@@ -24,7 +24,7 @@ class ShowController extends Controller
     public function HistoricalGold()
     {
         $gold = Metal::where('metalName','XAU')->get();
-        return $this->returnData('Gold : ',$gold,'There are all Prices of Gold for a period time','201');
+        return $this->returnData('gold',$gold,'There are all Prices of Gold for a period time','201');
     }
 
 
@@ -32,7 +32,7 @@ class ShowController extends Controller
     public function HistoricalSilver()
     {
         $silver = Metal::where('metalName','XAG')->get();
-        return $this->returnData('Silver : ',$silver,'There are all Prices of Silver for a period time','201');
+        return $this->returnData('silver',$silver,'There are all Prices of Silver for a period time','201');
     }
 
 
@@ -40,9 +40,22 @@ class ShowController extends Controller
     public function HistoricalPlatinum()
     {
         $platinum = Metal::where('metalName','XPT')->get();
-        return $this->returnData('Platinum : ',$platinum,'There are all Prices of Platinum for a period time','201');
+        return $this->returnData('platinum',$platinum,'There are all Prices of Platinum for a period time','201');
     }
 
+
+    public function getPrice($metalName)
+    {
+        $metal_names = config('yaffet.metal_name');
+        if(!in_array($metalName , $metal_names)){
+           return 'invalid metal name';
+        }
+        $code = config('yaffet.metal_codes')[$metalName];
+
+        $result = Metal::where('metalName',$code)->get();
+        return $this->returnData($metalName,$result,'There are all Prices of '.$metalName.' for a period time','201');
+
+    }
 
 
 
