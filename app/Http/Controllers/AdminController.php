@@ -131,92 +131,82 @@ class AdminController extends Controller
         $metals =  alert::get();
         foreach ($metals as $metal)
         {
-
             // get token from gold metal
             $gold = Metal::where('metalName', 'XAU')->latest()->first();
-            if ($metal->type == 'greater' AND $metal->metalName=='GOLD')
+            if ($metal->type == 'greater' AND $metal->metalName=='GOLD' AND $metal->price <= $gold->metalPrice)
             {
-                if($metal->price <= $gold->metalPrice )
-                {
                     $tokengreater[]=$metal->user->deviceToken;
-                }
             }
 
             //  get token from silver metal
             $silver = Metal::where('metalName', 'XAG')->latest()->first();
-            if ($metal->type == 'greater' AND $metal->metalName=='SILVER')
+            if ($metal->type == 'greater' AND $metal->metalName=='SILVER' AND $metal->price <= $silver->metalPrice)
             {
-                if($metal->price <= $silver->metalPrice )
-                {
                     $tokengreater[]=$metal->user->deviceToken;
-                }
             }
 
             // get token from platinum metal
             $plainum = Metal::where('metalName', 'XPT')->latest()->first();
-            if ($metal->type == 'greater' AND $metal->metalName=='PLATINUM')
+            if ($metal->type == 'greater' AND $metal->metalName=='PLATINUM' AND $metal->price <= $plainum->metalPrice)
             {
-                if($metal->price <= $plainum->metalPrice )
-                {
                     $tokengreater[]=$metal->user->deviceToken;
-                }
             }
 
         }
 
-
-        $SERVER_API_KEY = 'AAAA5KHt4DI:APA91bEQ4vjQacVPco7mq_rmnSfD7JSu9ZpwGnBhWE0cYq-QxPXPDbZOmFkM-c7jaC9lWPwb0hry9L3yh7qG0kNrM_Dt-aBV85qwqerXA5q5GImKiqFaogMvKvLtSHcmei2YkD_Qp4Tv';
-
-        if(!empty($tokengreater))
-        {
-            $data = [
-
-                "registration_ids" =>   $tokengreater ,
-
-                "notification" => [
-
-                    "title" => 'alert : ',
-
-                    "body" => 'price is high / low',
-
-                    "sound"=> "default" // required for sound on ios
-
-                ],
-
-            ];
-
-            $dataString = json_encode($data);
-
-            $headers = [
-
-                'Authorization: key=' . $SERVER_API_KEY,
-
-                'Content-Type: application/json',
-
-            ];
-
-            $ch = curl_init();
-
-            curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
-
-            curl_setopt($ch, CURLOPT_POST, true);
-
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
-
-            $response = curl_exec($ch);
-
-            return $this->returnData('response',$response,'done','201') ;
-        }
-        else
-        {
-            return $this->returnError('404','there is no token');
-        }
+//
+//        $SERVER_API_KEY = 'AAAA5KHt4DI:APA91bEQ4vjQacVPco7mq_rmnSfD7JSu9ZpwGnBhWE0cYq-QxPXPDbZOmFkM-c7jaC9lWPwb0hry9L3yh7qG0kNrM_Dt-aBV85qwqerXA5q5GImKiqFaogMvKvLtSHcmei2YkD_Qp4Tv';
+//
+//        if(!empty($tokengreater))
+//        {
+//            $data = [
+//
+//                "registration_ids" =>   $tokengreater ,
+//
+//                "notification" => [
+//
+//                    "title" => 'alert : ',
+//
+//                    "body" => 'price is high / low',
+//
+//                    "sound"=> "default" // required for sound on ios
+//
+//                ],
+//
+//            ];
+//
+//            $dataString = json_encode($data);
+//
+//            $headers = [
+//
+//                'Authorization: key=' . $SERVER_API_KEY,
+//
+//                'Content-Type: application/json',
+//
+//            ];
+//
+//            $ch = curl_init();
+//
+//            curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+//
+//            curl_setopt($ch, CURLOPT_POST, true);
+//
+//            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+//
+//            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+//
+//            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+//
+//            curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+//
+//            $response = curl_exec($ch);
+//
+//            return $this->returnData('response',$response,'done','201') ;
+//        }
+//        else
+//        {
+//            return $this->returnError('404','there is no token');
+//        }
 
 
 
@@ -234,9 +224,15 @@ class AdminController extends Controller
 
 
 
-        $metals = alert::get();
+        $metals = alert::get()->toArray();
+        dd($metals);
+        $gold = Metal::where('metalName', 'XAU')->latest()->first();
+        $silver = Metal::where('metalName', 'XAG')->latest()->first();
+        $plainum = Metal::where('metalName', 'XPT')->latest()->first();
 
+        foreach ($metals as $metal){
 
+        }
 
         foreach ($metals as $metal)
         {
@@ -245,10 +241,11 @@ class AdminController extends Controller
             $gold = Metal::where('metalName', 'XAU')->latest()->first();
             if ($metal->type == 'less' and $metal->metalName == 'GOLD' && $metal->price >= $gold->metalPrice)
             {
-                if ($metal->price >= $gold->metalPrice)
-                {
-                    $tokenless[] = $metal->user->deviceToken;
-                }
+
+                    $message = 'gold is less than '.$metal->price;
+//                    dd($message);
+                    $this->sendNotification($metal->user->deviceToken ,$message );
+
 
             }
 
@@ -258,7 +255,9 @@ class AdminController extends Controller
             {
                 if ($metal->price >= $silver->metalPrice)
                 {
-                    $tokenless[] = $metal->user->deviceToken;
+//                    $tokenless[] = $metal->user->deviceToken;
+                    $message = 'silver is less than '.$metal->price;
+                    $this->sendNotification($metal->user->deviceToken ,$message );
                 }
             }
 
@@ -268,7 +267,10 @@ class AdminController extends Controller
             {
                 if ($metal->price >= $plainum->metalPrice)
                 {
-                    $tokenless[] = $metal->user->deviceToken;
+//                    $tokenless[] = $metal->user->deviceToken;
+
+                    $message = 'platinum is less than '.$metal->price;
+                    $this->sendNotification($metal->user->deviceToken ,$message );
                 }
             }
 
@@ -276,19 +278,44 @@ class AdminController extends Controller
 
 
 
-        $SERVER_API_KEY = 'AAAA5KHt4DI:APA91bEQ4vjQacVPco7mq_rmnSfD7JSu9ZpwGnBhWE0cYq-QxPXPDbZOmFkM-c7jaC9lWPwb0hry9L3yh7qG0kNrM_Dt-aBV85qwqerXA5q5GImKiqFaogMvKvLtSHcmei2YkD_Qp4Tv';
+    }
 
-        if(!empty($tokenless))
-        {
+
+
+    public function handleSendNotification()
+    {
+        $metals = alert::get();
+
+        foreach ($metals as $metal){
+
+            if($metal->push != null)
+            {
+
+                $this->sendNotification($metal->user->deviceToken ,$metal->push );
+            }
+        }
+    }
+
+
+
+    public function sendNotification($tokengreater , $message)
+    {
+
+//        $SERVER_API_KEY = 'AAAA5KHt4DI:APA91bEQ4vjQacVPco7mq_rmnSfD7JSu9ZpwGnBhWE0cYq-QxPXPDbZOmFkM-c7jaC9lWPwb0hry9L3yh7qG0kNrM_Dt-aBV85qwqerXA5q5GImKiqFaogMvKvLtSHcmei2YkD_Qp4Tv';
+
+//        if(!empty($tokengreater))
+//        {
+
+        $SERVER_API_KEY  = config('yaffet.fcm_api_key');
             $data = [
 
-                "registration_ids" =>   $tokenless ,
+                "registration_ids" =>   [$tokengreater] ,
 
                 "notification" => [
 
                     "title" => 'alert : ',
 
-                    "body" => 'price is high / low',
+                    "body" => $message,
 
                     "sound"=> "default" // required for sound on ios
 
@@ -322,21 +349,13 @@ class AdminController extends Controller
 
             $response = curl_exec($ch);
 
-            return $this->returnData('response',$response,'done','201') ;
-
-        }
-
-        else
-        {
-            return $this->returnError('404','there is no token');
-        }
-
-
-
-
-    }
-
-
+            return true;
+//        }
+//        else
+//        {
+//            return $this->returnError('404','there is no token');
+//        }
+}
 
 
 

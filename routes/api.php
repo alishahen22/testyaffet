@@ -38,13 +38,13 @@ Route::get('/histPriceSilver',[AdminController::class,'histPriceSilver']);
 Route::get('/histPricePlatinum',[AdminController::class,'histPricePlatinum']);
 
 // send greater alert to user
-Route::post('/sendGreaterAlert',[AdminController::class,'sendGreaterAlert']);
+Route::get('/sendGreaterAlert',[AdminController::class,'sendGreaterAlert']);
 
 // send less alert to user
-Route::post('/sendLessAlert',[AdminController::class,'sendLessAlert']);
+Route::get('/sendLessAlert',[AdminController::class,'sendLessAlert']);
 
-
-
+//handleSendNotification
+Route::get('/send_notification',[AdminController::class,'handleSendNotification']);
 
              ///////                  Show ( chart )                ////////
 

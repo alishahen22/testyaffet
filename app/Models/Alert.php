@@ -20,6 +20,7 @@ class Alert extends Model
     ];
 
 
+    protected $appends = ['push'];
 
 
     public function user()
@@ -27,5 +28,22 @@ class Alert extends Model
         return $this->belongsTo('App\Models\User','user_id');
     }
 
+
+    public function getPushAttribute()
+    {
+        $type = $this->type;
+        $price = $this->price;
+        $metalname  = strtolower($this->metalName);
+        $metal_code = config('yaffet.metal_codes')[$metalname];
+        $current_price = Metal::where('metalName',  $metal_code )->latest()->first();
+        if($type == 'less'){
+            return ($current_price->price <= $price) ? $metalname." price is less than your alert price ".$price : null;
+        }else{
+            return ($current_price->price >= $price) ? $metalname." price is less than your alert price ".$price : null;
+        }
+
+
+
+    }
 
 }
