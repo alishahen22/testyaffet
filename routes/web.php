@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Api\BaseApiController;
 use App\Http\Controllers\PriceController;
 use Illuminate\Support\Facades\Route;
@@ -20,4 +21,30 @@ Route::get('/', function () {
 });
 
 
+///////                 Admin                ////////
 
+// call last prices of all metals from provider ( metal_api )
+Route::get('/saveLastPrice',[AdminController::class,'saveLastPrice']);
+
+// call historical for all metals
+Route::get('/saveHistMetals/{metalName}',[AdminController::class,'saveHistMetals']);
+
+//handleSendNotification
+Route::get('/send_notification',[AdminController::class,'handleSendNotification']);
+
+
+
+
+
+
+
+
+
+
+
+
+// send greater alert to user
+//Route::get('/sendGreaterAlert',[AdminController::class,'sendGreaterAlert']);
+//
+//// send less alert to user
+//Route::get('/sendLessAlert',[AdminController::class,'sendLessAlert']);

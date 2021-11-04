@@ -18,8 +18,8 @@ class CreateAlertsTable extends Migration
             $table->enum('metalName',["GOLD","SILVER","PLATINUM"]) ;
             $table->float('price');
             $table->enum('type',["greater","less"]);
-            $table->unsignedBigInteger('user_id')->nullable();
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->string('user_deviceToken')->nullable();
+            $table->foreign('user_deviceToken')->references('deviceToken')->on('users');
             $table->timestamps();
         });
     }

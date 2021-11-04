@@ -38,10 +38,27 @@ class UserController extends Controller
             return "empty metal name";
         }
 
-        $metalName = ($request->input('metalName')=='GOLD')?"XAU":($request->input('metalName')=='SILVER')?"XAG":
-            ($request->input('metalName')=='PLATINUM')?"XPT":"";
+//        $metalName = ($request->input('metalName')=='GOLD')?"XAU":($request->input('metalName')=='SILVER')?"XAG":
+//            ($request->input('metalName')=='PLATINUM')?"XPT":"";
+
+
+        if ($request->input('metalName')=='GOLD')
+        {
+            $metalName = 'XAU';
+        }
+        elseif($request->input('metalName')=='SILVER')
+        {
+            $metalName = 'XAG';
+        }
+        elseif($request->input('metalName')=='PLATINUM')
+        {
+            $metalName = 'XPT';
+        }
+
+
 
         $metal = Metal::where('metalName', $metalName)->latest()->first();
+
         $type = 'less';
         if($request->input('price') >  $metal->metalPrice){
             $type = 'greater';
@@ -52,7 +69,7 @@ class UserController extends Controller
             'metalName' => $request->input('metalName'),
 //            'type' => ($request->input('price') >  $metal->metalPrice) ? "greater" : "less",
             'type'=>$type,
-            'user_id' => $request->input('user_id'),
+            'user_deviceToken' => $request->input('user_deviceToken'),
         ]);
         return $this->returnSuccessMessage('done','201');
 

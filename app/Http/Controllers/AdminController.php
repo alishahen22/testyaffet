@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\SendNotificationJob;
+use App\Mail\SendNotification;
 use App\Models\Alert;
 use App\Models\Metal;
 use App\Traits\GeneralTrait;
@@ -17,10 +19,10 @@ class AdminController extends Controller
     public function saveLastPrice()
     {
 
-        $response = Http::get('https://metals-api.com/api/latest?access_key=t7mpy4a8dyxccmp5v9q3k5xiw67nnrd8z788nu32art8og5l90izl07i9vld');
+        $response = Http::get(config('yaffet.saveLastMetals'));
         $manage = json_decode($response, true);
 
-        if($response)
+        if($manage['success']==true)
         {
             $system_metals = config('app.metals');
             foreach($manage['rates'] as $key => $value)
@@ -33,13 +35,11 @@ class AdminController extends Controller
                         'metalName' => $key,
                         'metalPrice' => 1/$value ,
                         'date'=> gmdate("Y-m-d H:i:s", $timestamp)
-
-
                     ]);
                 }
             }
+            return $this->returnSuccessMessage('Metals saved successfully','201');
         }
-
         else
         {
             return $this->returnError('404','there is no response from provider');
@@ -48,235 +48,36 @@ class AdminController extends Controller
     }
 
 
-
-    // call all prices of gold for a period of time like year/month
-    public function histPriceGold()
+    // call all prices of metals for a period of time like year/month
+    public function saveHistMetals($metalName)
     {
-        $response = Http::get('https://metals-api.com/api/timeseries?access_key=rrsneuoegle9lc350kkqg9ms2nld4l70q6rdo5nzemangc0pc8nevse155tb&start_date=2020-02-26&end_date=2021-02-24&symbols=XAU');
+        $metal_names = config('yaffet.metal_name');
+        $metalcode = config('yaffet.metal_codes')[$metalName] ;
 
-        if ($response)
+        if (!in_array($metalName , $metal_names))
         {
-            $gold = json_decode($response, true);
-            foreach ($gold['rates'] as $key => $value)
+            return $this->returnError('404','invalid metals');
+        }
+
+        $response = Http::get(config('yaffet.saveHistoricalMetals').$metalcode);
+        $metal = json_decode($response, true);
+
+
+        if($metal['success'])
+        {
+            foreach ($metal['rates'] as $key => $value)
             {
-                $gold = new Metal;
-                $gold->metalPrice = 1/$value['XAU'];
-                $gold->date = $key." 12:00:00";
-                $gold->metalName = 'XAU';
-                $gold->save();
+                $metal = new Metal;
+                $metal->metalPrice = 1/$value[$metalcode];
+                $metal->date = $key." 12:00:00";
+                $metal->metalName = $metalcode;
+                $metal->save();
             }
         }
         else
         {
-            return $this->returnError('404','error api key or not found response');
+          return $this->returnError('404','error api');
         }
-
-    }
-
-
-    // call all prices of silver for a period of time like year/month
-    public function histPriceSilver()
-    {
-        $response = Http::get('https://metals-api.com/api/timeseries?access_key=rrsneuoegle9lc350kkqg9ms2nld4l70q6rdo5nzemangc0pc8nevse155tb&start_date=2020-02-26&end_date=2021-02-24&symbols=XAG');
-
-        if ($response)
-        {
-            $silver = json_decode($response, true);
-            foreach ($silver['rates'] as $key => $value)
-            {
-                $silver = new Metal;
-                $silver->metalPrice = 1/$value['XAG'];
-                $silver->date = $key." 12:00:00";
-                $silver->metalName = 'XAG';
-                $silver->save();
-            }
-        }
-        else
-        {
-            return $this->returnError('404','error api key or not found response');
-        }
-
-    }
-
-
-    // call all prices of platinum for a period of time like year/month
-    public function histPricePlatinum()
-    {
-        $response = Http::get('https://metals-api.com/api/timeseries?access_key=rrsneuoegle9lc350kkqg9ms2nld4l70q6rdo5nzemangc0pc8nevse155tb&start_date=2020-02-26&end_date=2021-02-24&symbols=XPT');
-
-        if ($response)
-        {
-            $platinum = json_decode($response, true);
-            foreach ($platinum['rates'] as $key => $value)
-            {
-                $platinum = new Metal;
-                $platinum->metalPrice = 1/$value['XPT'];
-                $platinum->date = $key." 12:00:00";
-                $platinum->metalName = 'XPT';
-                $platinum->save();
-            }
-        }
-        else
-        {
-            return $this->returnError('404','error api key or not found response');
-        }
-
-    }
-
-
-
-    // send greater alert to user
-    public function sendGreaterAlert()
-    {
-        $metals =  alert::get();
-        foreach ($metals as $metal)
-        {
-            // get token from gold metal
-            $gold = Metal::where('metalName', 'XAU')->latest()->first();
-            if ($metal->type == 'greater' AND $metal->metalName=='GOLD' AND $metal->price <= $gold->metalPrice)
-            {
-                    $tokengreater[]=$metal->user->deviceToken;
-            }
-
-            //  get token from silver metal
-            $silver = Metal::where('metalName', 'XAG')->latest()->first();
-            if ($metal->type == 'greater' AND $metal->metalName=='SILVER' AND $metal->price <= $silver->metalPrice)
-            {
-                    $tokengreater[]=$metal->user->deviceToken;
-            }
-
-            // get token from platinum metal
-            $plainum = Metal::where('metalName', 'XPT')->latest()->first();
-            if ($metal->type == 'greater' AND $metal->metalName=='PLATINUM' AND $metal->price <= $plainum->metalPrice)
-            {
-                    $tokengreater[]=$metal->user->deviceToken;
-            }
-
-        }
-
-//
-//        $SERVER_API_KEY = 'AAAA5KHt4DI:APA91bEQ4vjQacVPco7mq_rmnSfD7JSu9ZpwGnBhWE0cYq-QxPXPDbZOmFkM-c7jaC9lWPwb0hry9L3yh7qG0kNrM_Dt-aBV85qwqerXA5q5GImKiqFaogMvKvLtSHcmei2YkD_Qp4Tv';
-//
-//        if(!empty($tokengreater))
-//        {
-//            $data = [
-//
-//                "registration_ids" =>   $tokengreater ,
-//
-//                "notification" => [
-//
-//                    "title" => 'alert : ',
-//
-//                    "body" => 'price is high / low',
-//
-//                    "sound"=> "default" // required for sound on ios
-//
-//                ],
-//
-//            ];
-//
-//            $dataString = json_encode($data);
-//
-//            $headers = [
-//
-//                'Authorization: key=' . $SERVER_API_KEY,
-//
-//                'Content-Type: application/json',
-//
-//            ];
-//
-//            $ch = curl_init();
-//
-//            curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
-//
-//            curl_setopt($ch, CURLOPT_POST, true);
-//
-//            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-//
-//            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-//
-//            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-//
-//            curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
-//
-//            $response = curl_exec($ch);
-//
-//            return $this->returnData('response',$response,'done','201') ;
-//        }
-//        else
-//        {
-//            return $this->returnError('404','there is no token');
-//        }
-
-
-
-    }
-
-
-    // send less alert to user
-    public function sendLessAlert()
-    {
-        /**
-         * 1- get current price
-         * 2- get saved alerts
-         * 3- check alerts with current price and send notifications
-         */
-
-
-
-        $metals = alert::get()->toArray();
-        dd($metals);
-        $gold = Metal::where('metalName', 'XAU')->latest()->first();
-        $silver = Metal::where('metalName', 'XAG')->latest()->first();
-        $plainum = Metal::where('metalName', 'XPT')->latest()->first();
-
-        foreach ($metals as $metal){
-
-        }
-
-        foreach ($metals as $metal)
-        {
-
-            // get token from gold metal
-            $gold = Metal::where('metalName', 'XAU')->latest()->first();
-            if ($metal->type == 'less' and $metal->metalName == 'GOLD' && $metal->price >= $gold->metalPrice)
-            {
-
-                    $message = 'gold is less than '.$metal->price;
-//                    dd($message);
-                    $this->sendNotification($metal->user->deviceToken ,$message );
-
-
-            }
-
-            //  get token from silver metal
-            $silver = Metal::where('metalName', 'XAG')->latest()->first();
-            if ($metal->type == 'less' and $metal->metalName == 'SILVER')
-            {
-                if ($metal->price >= $silver->metalPrice)
-                {
-//                    $tokenless[] = $metal->user->deviceToken;
-                    $message = 'silver is less than '.$metal->price;
-                    $this->sendNotification($metal->user->deviceToken ,$message );
-                }
-            }
-
-            // get token from platinum metal
-            $plainum = Metal::where('metalName', 'XPT')->latest()->first();
-            if ($metal->type == 'less' and $metal->metalName == 'PLATINUM')
-            {
-                if ($metal->price >= $plainum->metalPrice)
-                {
-//                    $tokenless[] = $metal->user->deviceToken;
-
-                    $message = 'platinum is less than '.$metal->price;
-                    $this->sendNotification($metal->user->deviceToken ,$message );
-                }
-            }
-
-        }
-
-
 
     }
 
@@ -289,22 +90,18 @@ class AdminController extends Controller
         foreach ($metals as $metal){
 
             if($metal->push != null)
-            {
 
-                $this->sendNotification($metal->user->deviceToken ,$metal->push );
+            {
+                $this->sendNotification($metal->user_deviceToken ,$metal->push );
+                Alert::where('id', $metal->id)->delete();
             }
         }
     }
 
 
-
     public function sendNotification($tokengreater , $message)
     {
 
-//        $SERVER_API_KEY = 'AAAA5KHt4DI:APA91bEQ4vjQacVPco7mq_rmnSfD7JSu9ZpwGnBhWE0cYq-QxPXPDbZOmFkM-c7jaC9lWPwb0hry9L3yh7qG0kNrM_Dt-aBV85qwqerXA5q5GImKiqFaogMvKvLtSHcmei2YkD_Qp4Tv';
-
-//        if(!empty($tokengreater))
-//        {
 
         $SERVER_API_KEY  = config('yaffet.fcm_api_key');
             $data = [
@@ -350,21 +147,17 @@ class AdminController extends Controller
             $response = curl_exec($ch);
 
             return true;
-//        }
-//        else
-//        {
-//            return $this->returnError('404','there is no token');
-//        }
+
 }
 
 
 
-
-
-
-
-
-
+//    public function sendEmail()
+//    {
+//        $notification = (new SendNotificationJob())->delay(Carbon::now()->addSeconds(1));
+//        dispatch($notification);
+//        return 'alert sent';
+//    }
 
 
 
