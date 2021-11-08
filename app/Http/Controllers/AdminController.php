@@ -7,6 +7,7 @@ use App\Mail\SendNotification;
 use App\Models\Alert;
 use App\Models\Metal;
 use App\Traits\GeneralTrait;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
@@ -85,79 +86,12 @@ class AdminController extends Controller
 
     public function handleSendNotification()
     {
-        $metals = alert::get();
-
-        foreach ($metals as $metal){
-
-            if($metal->push != null)
-
-            {
-                $this->sendNotification($metal->user_deviceToken ,$metal->push );
-                Alert::where('id', $metal->id)->delete();
-            }
-        }
+                $metals = Alert::chunk(50,function ($alerts)
+                {
+                    dispatch(new SendNotificationJob($alerts));
+                    return "done";
+                });
     }
-
-
-    public function sendNotification($tokengreater , $message)
-    {
-
-
-        $SERVER_API_KEY  = config('yaffet.fcm_api_key');
-            $data = [
-
-                "registration_ids" =>   [$tokengreater] ,
-
-                "notification" => [
-
-                    "title" => 'alert : ',
-
-                    "body" => $message,
-
-                    "sound"=> "default" // required for sound on ios
-
-                ],
-
-            ];
-
-            $dataString = json_encode($data);
-
-            $headers = [
-
-                'Authorization: key=' . $SERVER_API_KEY,
-
-                'Content-Type: application/json',
-
-            ];
-
-            $ch = curl_init();
-
-            curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
-
-            curl_setopt($ch, CURLOPT_POST, true);
-
-            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
-
-            $response = curl_exec($ch);
-
-            return true;
-
-}
-
-
-
-//    public function sendEmail()
-//    {
-//        $notification = (new SendNotificationJob())->delay(Carbon::now()->addSeconds(1));
-//        dispatch($notification);
-//        return 'alert sent';
-//    }
 
 
 

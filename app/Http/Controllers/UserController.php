@@ -7,6 +7,8 @@ use App\Models\Metal;
 use App\Models\User;
 use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -17,18 +19,17 @@ class UserController extends Controller
     public function getToken(Request $request)
     {
 
-        if (empty($request->deviceToken)  || User::where('deviceToken', $request->input('deviceToken'))->exists() ) {
-            return $this->returnData('userId',null,'can\'t add this token','404');
+        if (empty($request->deviceToken) || User::where('deviceToken', $request->input('deviceToken'))->exists()) {
+            return $this->returnData('userId', null, 'can\'t add this token', '404');
         }
 
-            $user = User::create([
-                'deviceToken' => $request->input('deviceToken'),
-            ]);
+        $user = User::create([
+            'deviceToken' => $request->input('deviceToken'),
+        ]);
 
-            return $this->returnData('userId',$user->id,'pass to get token','201');
+        return $this->returnData('userId', $user->id, 'pass to get token', '201');
 
     }
-
 
 
     // save price of user
@@ -78,12 +79,5 @@ class UserController extends Controller
 
 
 
-
-
-
-
-
-
-
-
 }
+

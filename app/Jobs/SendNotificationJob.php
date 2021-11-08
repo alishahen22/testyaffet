@@ -22,9 +22,10 @@ class SendNotificationJob implements ShouldQueue
      *
      * @return void
      */
-    public function __construct()
+    public $alerts ;
+    public function __construct($alerts)
     {
-        //
+        $this->alerts = $alerts ;
     }
 
     /**
@@ -34,14 +35,16 @@ class SendNotificationJob implements ShouldQueue
      */
     public function handle()
     {
-        $metals = alert::get();
-
-        foreach ($metals as $metal){
-
-            if($metal->push != null)
+        foreach ($this->alerts as $alert){
+            if($alert->push != null)
             {
-
-                $this->sendNotification($metal->user->deviceToken ,$metal->push );
+                $this->sendNotification($alert->user_deviceToken ,$alert->push );
+                Alert::where('id', $alert->id)->delete();
+                return 'done' ;
+            }
+            else
+            {
+                return 'failed' ;
             }
         }
     }
@@ -50,12 +53,6 @@ class SendNotificationJob implements ShouldQueue
 
     public function sendNotification($tokengreater , $message)
     {
-
-//        $SERVER_API_KEY = 'AAAA5KHt4DI:APA91bEQ4vjQacVPco7mq_rmnSfD7JSu9ZpwGnBhWE0cYq-QxPXPDbZOmFkM-c7jaC9lWPwb0hry9L3yh7qG0kNrM_Dt-aBV85qwqerXA5q5GImKiqFaogMvKvLtSHcmei2YkD_Qp4Tv';
-
-//        if(!empty($tokengreater))
-//        {
-
         $SERVER_API_KEY  = config('yaffet.fcm_api_key');
         $data = [
 
@@ -98,6 +95,8 @@ class SendNotificationJob implements ShouldQueue
         curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
 
         $response = curl_exec($ch);
+
+        return "success";
 
     }
 

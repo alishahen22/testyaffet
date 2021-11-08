@@ -37,11 +37,10 @@ class Alert extends Model
         $metal_code = config('yaffet.metal_codes')[$metalname];
         $current_price = Metal::where('metalName',  $metal_code )->latest()->first();
         if($type == 'less'){
-            return ($current_price->price >= $price) ? $metalname." price is less than your alert price ".$price : null;
+            return ($current_price->metalPrice <= $price) ? $metalname." price is greater than your alert price ".$price : null;
         }else{
-            return ($current_price->price >= $price) ? $metalname." price is less than your alert price ".$price : null;
+            return ($current_price->metalPrice >= $price) ? $metalname." price is less than your alert price ".$price : null;
         }
-
 
     }
 

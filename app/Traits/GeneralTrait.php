@@ -36,6 +36,16 @@ trait GeneralTrait
             $key => $value
         ]);
     }
+
+    public function return3Data($key1,$value1,$key2,$value2,$key3,$value3)
+    {
+        return response()->json([
+            $key1 => $value1 ,
+            $key2 => $value2 ,
+            $key3 => $value3 ,
+        ]);
+    }
+
     public function returntoken($token,$value,$id,$valueId,$msg,$errNum)
     {
         return response()->json([
