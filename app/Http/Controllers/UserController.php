@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Alert;
+use App\Models\Currency;
 use App\Models\Metal;
 use App\Models\User;
 use App\Traits\GeneralTrait;
@@ -59,9 +60,10 @@ class UserController extends Controller
 
 
         $metal = Metal::where('metalName', $metalName)->latest()->first();
-        
+        $curr =  Currency::where('currency_code' , config("yaffet.currency_codes")[$request->input('currency')])->latest()->first();
+
         $type = 'less';
-        if($request->input('price') >  $metal->metalPrice){
+        if($request->input('price') >  $metal->metalPrice * $curr['price_rate']){
             $type = 'greater';
 
         }
@@ -73,7 +75,7 @@ class UserController extends Controller
             'type'=>$type,
             'user_deviceToken' => $request->input('user_deviceToken'),
         ]);
-        return $this->returnSuccessMessage('done','201');
+        return $curr ;
 
 
     }

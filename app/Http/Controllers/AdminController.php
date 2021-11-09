@@ -96,6 +96,8 @@ class AdminController extends Controller
 
 
     // call prices for all countries
+
+
     public function saveLastCurrency()
     {
 
@@ -120,7 +122,6 @@ class AdminController extends Controller
         }
 
     }
-
 
 
 }

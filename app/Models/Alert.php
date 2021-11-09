@@ -33,16 +33,20 @@ class Alert extends Model
     {
         $type = $this->type;
         $price = $this->price;
+        $currency = $this->currency; //Pound
         $metalname  = strtolower($this->metalName);
         $metal_code = config('yaffet.metal_codes')[$metalname];
         $current_price = Metal::where('metalName',  $metal_code )->latest()->first();
+        $curr =  Currency::where('currency_code' , config('yaffet.currency_codes')[$currency])->latest()->first();
+
 
         if($type == 'less'){
-            return ($current_price->metalPrice <= $price) ? $metalname." price is greater than your alert price ".$price : null;
+            return ($current_price->metalPrice * $curr['price_rate'] <= $price) ? $metalname." price is greater than your alert price ".$price . ' ' . $currency: null;
         }else{
-            return ($current_price->metalPrice >= $price) ? $metalname." price is less than your alert price ".$price : null;
+            return ($current_price->metalPrice * $curr['price_rate'] >= $price) ? $metalname." price is less than your alert price ".$price . ' ' . $currency: null;
         }
 
     }
+
 
 }
