@@ -28,10 +28,12 @@ Route::get('/saveLastPrice',[AdminController::class,'saveLastPrice']);
 // call historical for all metals
 Route::get('/saveHistMetals/{metalName}',[AdminController::class,'saveHistMetals']);
 
-//handleSendNotification
+// handleSendNotification
 Route::get('/send_notification',[AdminController::class,'handleSendNotification']);
 
 
+// call prices for all countries
+Route::get('/saveLastCurrency',[AdminController::class,'saveLastCurrency']);
 
 
 

@@ -59,7 +59,7 @@ class UserController extends Controller
 
 
         $metal = Metal::where('metalName', $metalName)->latest()->first();
-
+        
         $type = 'less';
         if($request->input('price') >  $metal->metalPrice){
             $type = 'greater';
@@ -69,6 +69,7 @@ class UserController extends Controller
             'price' => $request->input('price'),
             'metalName' => $request->input('metalName'),
 //            'type' => ($request->input('price') >  $metal->metalPrice) ? "greater" : "less",
+            'currency' => $request->input('currency') ,
             'type'=>$type,
             'user_deviceToken' => $request->input('user_deviceToken'),
         ]);

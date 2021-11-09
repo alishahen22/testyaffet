@@ -17,6 +17,7 @@ class CreateAlertsTable extends Migration
             $table->id();
             $table->enum('metalName',["GOLD","SILVER","PLATINUM"]) ;
             $table->float('price');
+            $table->string('currency');
             $table->enum('type',["greater","less"]);
             $table->string('user_deviceToken')->nullable();
             $table->foreign('user_deviceToken')->references('deviceToken')->on('users');

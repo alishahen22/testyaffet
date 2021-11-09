@@ -10,7 +10,7 @@ class Alert extends Model
     use HasFactory;
 
     protected $fillable = [
-      'metalName' , 'price' , 'type' , 'user_deviceToken'
+      'metalName' , 'price' ,'currency' ,'type' , 'user_deviceToken'
     ];
 
 
@@ -36,6 +36,7 @@ class Alert extends Model
         $metalname  = strtolower($this->metalName);
         $metal_code = config('yaffet.metal_codes')[$metalname];
         $current_price = Metal::where('metalName',  $metal_code )->latest()->first();
+
         if($type == 'less'){
             return ($current_price->metalPrice <= $price) ? $metalname." price is greater than your alert price ".$price : null;
         }else{

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Jobs\SendNotificationJob;
 use App\Mail\SendNotification;
 use App\Models\Alert;
+use App\Models\Currency;
 use App\Models\Metal;
 use App\Traits\GeneralTrait;
 use Carbon\Carbon;
@@ -91,6 +92,33 @@ class AdminController extends Controller
                     dispatch(new SendNotificationJob($alerts));
                     return "done";
                 });
+    }
+
+
+    // call prices for all countries
+    public function saveLastCurrency()
+    {
+
+        $response = Http::get(config('yaffet.saveLastCurrency'));
+        $manage = json_decode($response, true);
+
+        if($manage['success']==true)
+        {
+
+            foreach($manage['quotes'] as $key => $value)
+            {
+                Currency::create([
+                    'currency_code' => substr($key, -3),
+                    'price_rate' => $value ,
+                ]);
+            }
+            return $this->returnSuccessMessage('Metals saved successfully','201');
+        }
+        else
+        {
+            return $this->returnError('404','there is no response from provider');
+        }
+
     }
 
 
