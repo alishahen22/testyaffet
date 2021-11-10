@@ -114,7 +114,7 @@ class AdminController extends Controller
                     'price_rate' => $value ,
                 ]);
             }
-            return $this->returnSuccessMessage('Metals saved successfully','201');
+            return $this->returnSuccessMessage('currency saved successfully','201');
         }
         else
         {

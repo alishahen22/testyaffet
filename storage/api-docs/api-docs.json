@@ -7,7 +7,6 @@
     "paths": {
         "/api/getToken": {
             "post": {
-                "summary": "authentication with device token",
                 "description": "Login with token",
                 "requestBody": {
                     "description": "",
@@ -41,19 +40,19 @@
             "post": {
                 "description": "user pass current price ( alert )",
                 "requestBody": {
-                    "description": "",
+                    "description": "pass price , metalName , user_deviceToken and currency ",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
                                 "required": [
-                                    "user_id,price,metalName"
+                                    "price,metalName,user_deviceToken,currency"
                                 ],
                                 "properties": {
-                                    "user_id": {
-                                        "type": "bigint",
-                                        "format": "bigint",
-                                        "example": "1"
+                                    "user_deviceToken": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "hdj84t3489hdfr"
                                     },
                                     "price": {
                                         "type": "float",
@@ -64,6 +63,11 @@
                                         "type": "string",
                                         "format": "string",
                                         "example": "GOLD"
+                                    },
+                                    "currency": {
+                                        "type": "string",
+                                        "format": "string",
+                                        "example": "EGP"
                                     }
                                 },
                                 "type": "object"
@@ -80,7 +84,7 @@
         },
         "/api/getLastprice": {
             "get": {
-                "description": "get last price to metal",
+                "description": "get last price to 3 metals",
                 "responses": {
                     "200": {
                         "description": "Success"
@@ -88,7 +92,7 @@
                 }
             }
         },
-        "/api/histsilver": {
+        "api/getHistPrice/silver": {
             "get": {
                 "description": "call historical price of silver",
                 "responses": {
@@ -98,7 +102,7 @@
                 }
             }
         },
-        "/api/histgold": {
+        "api/getHistPrice/gold": {
             "get": {
                 "description": "call historical price of gold",
                 "responses": {
@@ -108,9 +112,19 @@
                 }
             }
         },
-        "/api/histplatinum": {
+        "api/getHistPrice/platinum": {
             "get": {
                 "description": "call historical price of platinum",
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                }
+            }
+        },
+        "/api/getLastCurrency": {
+            "get": {
+                "description": "Get last Currency",
                 "responses": {
                     "200": {
                         "description": "Success"

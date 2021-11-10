@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Currency;
 use App\Models\Metal;
 use App\Traits\GeneralTrait;
 use Illuminate\Http\Request;
@@ -42,7 +43,11 @@ class ShowController extends Controller
 
 
 
-
+public function getLastCurrency()
+{
+   $lastCurrency =  Currency::select('currency_code','price_rate')->latest()->get()->unique('currency_code');
+   return $lastCurrency;
+}
 
 
 

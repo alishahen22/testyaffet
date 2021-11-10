@@ -36,3 +36,6 @@ Route::post('/getToken',[UserController::class,'getToken']);
 
 // save price from user
 Route::post('/userPrice',[UserController::class,'userPrice']);
+
+// get last Currency
+Route::get('/getLastCurrency',[ShowController::class,'getLastCurrency']);

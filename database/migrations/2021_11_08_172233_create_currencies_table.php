@@ -16,7 +16,7 @@ class CreateCurrenciesTable extends Migration
         Schema::create('currencies', function (Blueprint $table) {
             $table->id();
             $table->string('currency_code');
-            $table->float('price_rate');
+            $table->float('price_rate',14);
             $table->timestamps();
         });
     }

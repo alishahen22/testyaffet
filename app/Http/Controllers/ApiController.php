@@ -11,7 +11,7 @@ class ApiController extends Controller
     /**
      * @OA\Post(
      * path="/api/getToken",
-     * summary="authentication with device token",
+
      * description="Login with token",
      * @OA\RequestBody(
      *    required=true,
@@ -37,12 +37,13 @@ class ApiController extends Controller
      * description="user pass current price ( alert )",
      * @OA\RequestBody(
      *    required=true,
-     *    description="",
+     *    description="pass price , metalName , user_deviceToken and currency ",
      *    @OA\JsonContent(
-     *       required={"user_id,price,metalName"},
-     *       @OA\Property(property="user_id", type="bigint", format="bigint", example="1"),
+     *       required={"price,metalName,user_deviceToken,currency"},
+     *       @OA\Property(property="user_deviceToken", type="string", format="string", example="hdj84t3489hdfr"),
      *        @OA\Property(property="price", type="float", format="string", example="332"),
      *       @OA\Property(property="metalName", type="string", format="string", example="GOLD"),
+     *       @OA\Property(property="currency", type="string", format="string", example="EGP"),
      *    ),
      * ),
      * @OA\Response(
@@ -58,7 +59,7 @@ class ApiController extends Controller
     /**
     * @OA\get(
     * path="/api/getLastprice",
-    * description="get last price to metal",
+    * description="get last price to 3 metals",
     *   @OA\Response(
     *     response=200,
     *     description="Success",
@@ -71,7 +72,7 @@ class ApiController extends Controller
     //GET HESTORICAL SILVER
     /**
     * @OA\get(
-    * path="/api/histsilver",
+    * path="api/getHistPrice/silver",
     * description="call historical price of silver",
     *   @OA\Response(
     *     response=200,
@@ -85,7 +86,7 @@ class ApiController extends Controller
     //GET HESTORICAL GOLD
     /**
     * @OA\get(
-    * path="/api/histgold",
+    * path="api/getHistPrice/gold",
     * description="call historical price of gold",
     *   @OA\Response(
     *     response=200,
@@ -99,7 +100,7 @@ class ApiController extends Controller
     //GET HESTORICAL PLATINUM
     /**
     * @OA\get(
-    * path="/api/histplatinum",
+    * path="api/getHistPrice/platinum",
     * description="call historical price of platinum",
     *   @OA\Response(
     *     response=200,
@@ -109,7 +110,18 @@ class ApiController extends Controller
     * )
     */
 
+         //Get last Currency
+    /**
+    * @OA\get(
+    * path="/api/getLastCurrency",
+    * description="Get last Currency",
+    *   @OA\Response(
+    *     response=200,
+    *     description="Success",
 
+    *  ),
+    * )
+    */
 
 
 }

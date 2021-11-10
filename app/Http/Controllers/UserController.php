@@ -36,8 +36,8 @@ class UserController extends Controller
 
 
     // get token from user device
-    public function userPrice(ValidateRequest $request)
-    {
+    public function userPrice(Request $request)
+    {    ////////////////////// validation ///////////////////
         $validation = Validator::make($request->all(), [
             'metalName' => [
                 'required',
@@ -49,22 +49,29 @@ class UserController extends Controller
             'user_deviceToken' => 'required'
         ]);
 
-
         if ($validation->fails()) {
 
             return $this->returnData('price', "error", "invalid Price , metalName or currency", '404');
 
 
-            if (empty($request->metalName)) {
-                return "empty metal name";
-            }}
-
-        $metalName = ($request->input('metalName')=='GOLD')?"XAU":($request->input('metalName')=='SILVER')?"XAG":
-            ($request->input('metalName')=='PLATINUM')?"XPT":"";
+            }
+                                    /////////////////////////////
+       // $metalName = ($request->input('metalName')=='GOLD')?"XAU":($request->input('metalName')=='SILVER')?"XAG":
+         //  ($request->input('metalName')=='PLATINUM')?"XPT":"";
+         if ($request->input('metalName') == 'GOLD') {
+            $metalName = 'XAU';
+        } elseif ($request->input('metalName') == 'SILVER') {
+            $metalName = 'XAG';
+        } elseif ($request->input('metalName') == 'PLATINUM') {
+            $metalName = 'XPT';
+        }
 
             $metal = Metal::where('metalName', $metalName)->latest()->first();
             $curr = Currency::where('currency_code', config("yaffet.currency_codes")[$request->input('currency')])->latest()->first();
             $user = User::where('deviceToken', $request->input('user_deviceToken'))->first();
+
+            return(empty($curr)||empty($metal->metalPrice)) ?  $this->returnData('price', "error", "There is table empty", '404'):null;
+            return (empty($user)) ? $this->returnData('price', "error", "the user_deviceToken is not in user token", '404'): null;
 
             $type = 'less';
             if ($request->input('price') > $metal->metalPrice * $curr['price_rate']) {
