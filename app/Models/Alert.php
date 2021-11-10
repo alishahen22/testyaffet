@@ -10,7 +10,7 @@ class Alert extends Model
     use HasFactory;
 
     protected $fillable = [
-      'metalName' , 'price' ,'currency' ,'type' , 'user_deviceToken'
+      'metalName' , 'price' ,'currency' ,'type' , 'user_id'
     ];
 
 
@@ -25,7 +25,7 @@ class Alert extends Model
 
     public function user()
     {
-        return $this->belongsTo('App\Models\User','user_token');
+        return $this->belongsTo('App\Models\User','user_id');
     }
 
 

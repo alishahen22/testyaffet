@@ -46,7 +46,7 @@ class User extends Authenticatable
 
     public function alert()
     {
-        return $this->hasMany('App\Models\Alert','user_token');
+        return $this->hasMany('App\Models\Alert','user_id');
     }
 
 

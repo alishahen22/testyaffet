@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ValidateRequest;
 use App\Models\Alert;
 use App\Models\Currency;
 use App\Models\Metal;
@@ -33,54 +34,55 @@ class UserController extends Controller
     }
 
 
-    // save price of user
-    public function userPrice(Request $request)
+
+    // get token from user device
+    public function userPrice(ValidateRequest $request)
     {
-        if(empty($request->metalName)){
-            return "empty metal name";
-        }
-
-//        $metalName = ($request->input('metalName')=='GOLD')?"XAU":($request->input('metalName')=='SILVER')?"XAG":
-//            ($request->input('metalName')=='PLATINUM')?"XPT":"";
-
-
-        if ($request->input('metalName')=='GOLD')
-        {
-            $metalName = 'XAU';
-        }
-        elseif($request->input('metalName')=='SILVER')
-        {
-            $metalName = 'XAG';
-        }
-        elseif($request->input('metalName')=='PLATINUM')
-        {
-            $metalName = 'XPT';
-        }
-
-
-
-        $metal = Metal::where('metalName', $metalName)->latest()->first();
-        $curr =  Currency::where('currency_code' , config("yaffet.currency_codes")[$request->input('currency')])->latest()->first();
-
-        $type = 'less';
-        if($request->input('price') >  $metal->metalPrice * $curr['price_rate']){
-            $type = 'greater';
-
-        }
-        $alert = Alert::create([
-            'price' => $request->input('price'),
-            'metalName' => $request->input('metalName'),
-//            'type' => ($request->input('price') >  $metal->metalPrice) ? "greater" : "less",
-            'currency' => $request->input('currency') ,
-            'type'=>$type,
-            'user_deviceToken' => $request->input('user_deviceToken'),
+        $validation = Validator::make($request->all(), [
+            'metalName' => [
+                'required',
+                Rule::in(['GOLD', 'PLATINUM', 'SILVER']),],
+            'price' => 'required|numeric',
+            'currency' => [
+                    'required',
+                    Rule::in(['Dollar', 'Pound', 'Euro','Yen','EGP','SAU','KWT','OMN','UAE','QAT']),],
+            'user_deviceToken' => 'required'
         ]);
-        return $curr ;
+
+
+        if ($validation->fails()) {
+
+            return $this->returnData('price', "error", "invalid Price , metalName or currency", '404');
+
+
+            if (empty($request->metalName)) {
+                return "empty metal name";
+            }}
+
+        $metalName = ($request->input('metalName')=='GOLD')?"XAU":($request->input('metalName')=='SILVER')?"XAG":
+            ($request->input('metalName')=='PLATINUM')?"XPT":"";
+
+            $metal = Metal::where('metalName', $metalName)->latest()->first();
+            $curr = Currency::where('currency_code', config("yaffet.currency_codes")[$request->input('currency')])->latest()->first();
+            $user = User::where('deviceToken', $request->input('user_deviceToken'))->first();
+
+            $type = 'less';
+            if ($request->input('price') > $metal->metalPrice * $curr['price_rate']) {
+                $type = 'greater';
+
+            }
+            $alert = Alert::create([
+                'price' => $request->input('price'),
+                'metalName' => $request->input('metalName'),
+                'currency' => $request->input('currency'),
+                'type' => $type,
+                'user_id' => $user->id,
+            ]);
+            return $this->returnSuccessMessage('done', '201');
+
+        }
 
 
     }
 
-
-
-}
 

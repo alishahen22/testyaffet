@@ -24,12 +24,15 @@ return[
 
 
    'currency_codes'=>[
-    'Dollars'=>'USD',
+    'Dollar'=>'USD',
     'Pound'=>'GBP',
-    'Eures'=>'EUR',
+    'Euros'=>'EUR',
     'Yen' =>'JPY',
-    'EGP' => 'EGP'
-],
-
-
+    'EGP' => 'EGP',
+    'SAU' => 'SAR' ,
+    'KWT' => 'KWD' ,
+    'OMN' => 'OMR' ,
+    'UAE' => 'AED' ,
+    'QAT' => 'QAR' ,
+   ],
     ];

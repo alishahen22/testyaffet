@@ -38,13 +38,8 @@ class SendNotificationJob implements ShouldQueue
         foreach ($this->alerts as $alert){
             if($alert->push != null)
             {
-                $this->sendNotification($alert->user_deviceToken ,$alert->push );
+                $this->sendNotification($alert->user->deviceToken->all() ,$alert->push );
                 Alert::where('id', $alert->id)->delete();
-                return 'done' ;
-            }
-            else
-            {
-                return 'failed' ;
             }
         }
     }
@@ -60,7 +55,7 @@ class SendNotificationJob implements ShouldQueue
 
             "notification" => [
 
-                "title" => 'alert : ',
+                "title" => 'alert',
 
                 "body" => $message,
 
