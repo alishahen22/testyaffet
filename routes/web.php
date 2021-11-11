@@ -44,7 +44,6 @@ Route::get('/saveLastCurrency',[AdminController::class,'saveLastCurrency']);
 
 
 
-
 // send greater alert to user
 //Route::get('/sendGreaterAlert',[AdminController::class,'sendGreaterAlert']);
 //

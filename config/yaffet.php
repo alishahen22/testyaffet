@@ -18,21 +18,24 @@ return[
 
     'saveLastMetals' => 'https://metals-api.com/api/latest?access_key=62tnp5b1b2ihcbqk5r7h0p8uehivlk1ocsgwesevdnzp3qxer6lol2kapsbd',
 
-    'saveHistoricalMetals' => 'https://metals-api.com/api/timeseries?access_key=rrsneuoegle9lc350kkqg9ms2nld4l70q6rdo5nzemangc0pc8nevse155tb&start_date=2020-02-26&end_date=2021-02-24&symbols=',
+    'saveHistoricalMetals' => 'https://metals-api.com/api/timeseries?access_key=rrsneuoegle9lc350kkqg9ms2nld4l70q6rdo5nzemangc0pc8nevse155tb&start_date=2021-02-25&end_date=2021-11-10&symbols=',
 
     'saveLastCurrency' => 'http://api.currencylayer.com/live?access_key=1c73a1ec73a74c7d270c947d02253105',
 
 
    'currency_codes'=>[
-    'Dollar'=>'USD',
-    'Pound'=>'GBP',
-    'Euros'=>'EUR',
+    'USA Dollar'=>'USD',
+    'British pound'=>'GBP',
+    'Euro'=>'EUR',
     'Yen' =>'JPY',
-    'EGP' => 'EGP',
-    'SAU' => 'SAR' ,
-    'KWT' => 'KWD' ,
-    'OMN' => 'OMR' ,
-    'UAE' => 'AED' ,
-    'QAT' => 'QAR' ,
+    'Egyptian pound' => 'EGP',
+    'Saudi riyal' => 'SAR' ,
+    'Kuwaiti dinar' => 'KWD' ,
+    'Omani rial' => 'OMR' ,
+    'UAE dirham' => 'AED' ,
+    'Qatari riyal' => 'QAR' ,
+    'Australian dollar' =>'AUD',
+    'Canadian dollar'=>'CAD',
+
    ],
     ];

@@ -54,13 +54,12 @@ class AdminController extends Controller
     public function saveHistMetals($metalName)
     {
         $metal_names = config('yaffet.metal_name');
-        $metalcode = config('yaffet.metal_codes')[$metalName] ;
 
         if (!in_array($metalName , $metal_names))
         {
             return $this->returnError('404','invalid metals');
         }
-
+        $metalcode = config('yaffet.metal_codes')[$metalName] ;
         $response = Http::get(config('yaffet.saveHistoricalMetals').$metalcode);
         $metal = json_decode($response, true);
 
@@ -104,7 +103,7 @@ class AdminController extends Controller
         $response = Http::get(config('yaffet.saveLastCurrency'));
         $manage = json_decode($response, true);
 
-        if($manage['success']==true)
+        if($manage['success'])
         {
 
             foreach($manage['quotes'] as $key => $value)

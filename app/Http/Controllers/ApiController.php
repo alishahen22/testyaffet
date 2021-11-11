@@ -10,7 +10,7 @@ class ApiController extends Controller
     //  get token from user device
     /**
      * @OA\Post(
-     * path="/api/getToken",
+     * path="/mobile/api/getToken",
 
      * description="Login with token",
      * @OA\RequestBody(
@@ -33,7 +33,7 @@ class ApiController extends Controller
     // get price from user to ( alert )
     /**
      * @OA\Post(
-     * path="/api/userPrice",
+     * path="/mobile/api/userPrice",
      * description="user pass current price ( alert )",
      * @OA\RequestBody(
      *    required=true,
@@ -56,72 +56,54 @@ class ApiController extends Controller
 
 
     // GET LAST PRICE
-    /**
-    * @OA\get(
-    * path="/api/getLastprice",
-    * description="get last price to 3 metals",
-    *   @OA\Response(
-    *     response=200,
-    *     description="Success",
 
-    *  ),
-    * )
-    */
+       /**
+        * @OA\Get(
+        *     path="/mobile/api/getLastprice",
+        *      description="get last price to 3 metals",
+        *     @OA\Response(response="200", description="Success")
+        * )
+        */
+        //GET HESTORICAL SILVER
 
 
-    //GET HESTORICAL SILVER
-    /**
-    * @OA\get(
-    * path="api/getHistPrice/silver",
-    * description="call historical price of silver",
-    *   @OA\Response(
-    *     response=200,
-    *     description="Success",
+        /**
+        * @OA\Get(
+        *     path="/mobile/api/getHistPrice/silver",
+        *      description="call historical price of silver",
+        *     @OA\Response(response="200", description="Success")
+        * )
+        */
 
-    *  ),
-    * )
-    */
+        //GET HESTORICAL GOLD
 
+       /**
+        * @OA\Get(
+        *     path="/mobile/api/getHistPrice/gold",
+        *      description="call historical price of gold",
+        *     @OA\Response(response="200", description="Success")
+        * )
+        */
 
-    //GET HESTORICAL GOLD
-    /**
-    * @OA\get(
-    * path="api/getHistPrice/gold",
-    * description="call historical price of gold",
-    *   @OA\Response(
-    *     response=200,
-    *     description="Success",
+        //GET HESTORICAL PLATINUM
+        /**
+        * @OA\Get(
+        *     path="/mobile/api/getHistPrice/platinum",
+        *      description="call historical price of platinum",
+        *     @OA\Response(response="200", description="Success")
+        * )
+        */
 
-    *  ),
-    * )
-    */
+                //Get last Currency
 
+        /**
+         * @OA\Get(
+         *     path="/mobile/api/getLastCurrency",
+         *      description="Get last Currency",
+         *     @OA\Response(response="200", description="Success")
+         * )
+         */
 
-    //GET HESTORICAL PLATINUM
-    /**
-    * @OA\get(
-    * path="api/getHistPrice/platinum",
-    * description="call historical price of platinum",
-    *   @OA\Response(
-    *     response=200,
-    *     description="Success",
-
-    *  ),
-    * )
-    */
-
-         //Get last Currency
-    /**
-    * @OA\get(
-    * path="/api/getLastCurrency",
-    * description="Get last Currency",
-    *   @OA\Response(
-    *     response=200,
-    *     description="Success",
-
-    *  ),
-    * )
-    */
 
 
 }

@@ -31,7 +31,7 @@ class ShowController extends Controller
     {
         $metal_names = config('yaffet.metal_name');
         if(!in_array($metalName , $metal_names)){
-           return 'invalid metal name';
+            return $this->returnError('404','invalid metals');
         }
         $code = config('yaffet.metal_codes')[$metalName];
 

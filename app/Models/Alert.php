@@ -41,9 +41,9 @@ class Alert extends Model
 
 
         if($type == 'less'){
-            return ($current_price->metalPrice * $curr['price_rate'] <= $price) ? $metalname." price is greater than your alert price ".$price . ' ' . $currency: null;
+            return ($current_price->metalPrice * $curr['price_rate'] <= $price) ? $metalname." price is less than your alert price ".$price . ' ' . $currency: null;
         }else{
-            return ($current_price->metalPrice * $curr['price_rate'] >= $price) ? $metalname." price is less than your alert price ".$price . ' ' . $currency: null;
+            return ($current_price->metalPrice * $curr['price_rate'] >= $price) ? $metalname." price is greater than your alert price ".$price . ' ' . $currency: null;
         }
 
     }
