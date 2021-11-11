@@ -92,7 +92,7 @@
                 }
             }
         },
-        "api/getHistPrice/silver": {
+        "/api/getHistPrice/silver": {
             "get": {
                 "description": "call historical price of silver",
                 "responses": {
@@ -102,7 +102,7 @@
                 }
             }
         },
-        "api/getHistPrice/gold": {
+        "/api/getHistPrice/gold": {
             "get": {
                 "description": "call historical price of gold",
                 "responses": {
@@ -112,7 +112,7 @@
                 }
             }
         },
-        "api/getHistPrice/platinum": {
+        "/api/getHistPrice/platinum": {
             "get": {
                 "description": "call historical price of platinum",
                 "responses": {

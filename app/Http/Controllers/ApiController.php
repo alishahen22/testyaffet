@@ -10,7 +10,7 @@ class ApiController extends Controller
     //  get token from user device
     /**
      * @OA\Post(
-     * path="/mobile/api/getToken",
+     * path="/api/getToken",
 
      * description="Login with token",
      * @OA\RequestBody(
@@ -33,7 +33,7 @@ class ApiController extends Controller
     // get price from user to ( alert )
     /**
      * @OA\Post(
-     * path="/mobile/api/userPrice",
+     * path="/api/userPrice",
      * description="user pass current price ( alert )",
      * @OA\RequestBody(
      *    required=true,
@@ -59,7 +59,7 @@ class ApiController extends Controller
 
        /**
         * @OA\Get(
-        *     path="/mobile/api/getLastprice",
+        *     path="/api/getLastprice",
         *      description="get last price to 3 metals",
         *     @OA\Response(response="200", description="Success")
         * )
@@ -69,7 +69,7 @@ class ApiController extends Controller
 
         /**
         * @OA\Get(
-        *     path="/mobile/api/getHistPrice/silver",
+        *     path="/api/getHistPrice/silver",
         *      description="call historical price of silver",
         *     @OA\Response(response="200", description="Success")
         * )
@@ -79,7 +79,7 @@ class ApiController extends Controller
 
        /**
         * @OA\Get(
-        *     path="/mobile/api/getHistPrice/gold",
+        *     path="/api/getHistPrice/gold",
         *      description="call historical price of gold",
         *     @OA\Response(response="200", description="Success")
         * )
@@ -88,7 +88,7 @@ class ApiController extends Controller
         //GET HESTORICAL PLATINUM
         /**
         * @OA\Get(
-        *     path="/mobile/api/getHistPrice/platinum",
+        *     path="/api/getHistPrice/platinum",
         *      description="call historical price of platinum",
         *     @OA\Response(response="200", description="Success")
         * )
@@ -98,7 +98,7 @@ class ApiController extends Controller
 
         /**
          * @OA\Get(
-         *     path="/mobile/api/getLastCurrency",
+         *     path="/api/getLastCurrency",
          *      description="Get last Currency",
          *     @OA\Response(response="200", description="Success")
          * )

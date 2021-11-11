@@ -17,12 +17,8 @@ class ShowController extends Controller
     // get last price for metals ( GOLD , SELVER , PLATINUM )
     public function getLastprice()
     {
-        $metalgold = Metal::select('metalName','metalPrice','date')->where('metalName','XAU')->orderBy('date','desc')->first();
-        $metalsilver = Metal::select('metalName','metalPrice','date')->where('metalName','XAG')->orderBy('date','desc')->first();
-        $metalplatinum = Metal::select('metalName','metalPrice','date')->where('metalName','XPT')->orderBy('date','desc')->first();
-
-        return $this->return3Data('metalgold',$metalgold,'metalsilver',$metalsilver,
-            'metalplatinum',$metalplatinum);
+        $metals = Metal::select('metalName','metalPrice','date')->latest()->take(3)->get();
+        return ($metals);
     }
 
 

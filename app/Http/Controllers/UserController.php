@@ -56,9 +56,11 @@ class UserController extends Controller
 
 
             }
+            if ( !(User::where('deviceToken', $request->input('user_deviceToken'))->exists())) {
+                return $this->returnData('userId', null, 'can\'t add this token', '404');
+            }
                                     /////////////////////////////
-       // $metalName = ($request->input('metalName')=='GOLD')?"XAU":($request->input('metalName')=='SILVER')?"XAG":
-         //  ($request->input('metalName')=='PLATINUM')?"XPT":"";
+
          if ($request->input('metalName') == 'GOLD') {
             $metalName = 'XAU';
         } elseif ($request->input('metalName') == 'SILVER') {
