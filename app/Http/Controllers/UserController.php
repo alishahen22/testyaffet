@@ -38,28 +38,20 @@ class UserController extends Controller
 
     // get token from user device
     public function userPrice(Request $request)
-    {    ////////////////////// validation ///////////////////
+    {
+        // validate
         $validation = Validator::make($request->all(), [
-            'metalName' => [
-                'required',
-                Rule::in(['GOLD', 'PLATINUM', 'SILVER']),],
+            'metalName' => [ 'required', Rule::in(['GOLD', 'PLATINUM', 'SILVER']),],
             'price' => 'required|numeric',
-            'currency' => [
-                    'required',
-                    Rule::in(['USA Dollar','British pound', 'Euro','Yen','Egyptian pound','Saudi riyal', 'Saudi riyal','Kuwaiti dinar','Omani rial','UAE dirham','Qatari riyal', 'Australian dollar','Canadian dollar']),],
+            'currency' => [ 'required', Rule::in(['USA Dollar','British pound', 'Euro','Yen','Egyptian pound','Saudi riyal','Kuwaiti dinar','Omani rial','UAE dirham','Qatari riyal', 'Australian dollar','Canadian dollar']),],
             'user_deviceToken' => 'required'
         ]);
 
-        if ($validation->fails()) {
+        if ($validation->fails() || !(User::where('deviceToken', $request->input('user_deviceToken'))->exists()))
+        {
+            return $this->returnError('404' ,"invalid input");
+        }
 
-            return $this->returnData('price', "error", "invalid Price , metalName or currency", '404');
-
-
-            }
-            if ( !(User::where('deviceToken', $request->input('user_deviceToken'))->exists())) {
-                return $this->returnData('userId', null, 'can\'t add this token', '404');
-            }
-                                    /////////////////////////////
 
          if ($request->input('metalName') == 'GOLD') {
             $metalName = 'XAU';
@@ -72,29 +64,26 @@ class UserController extends Controller
             $metal = Metal::where('metalName', $metalName)->latest()->first();
             $curr = Currency::where('currency_code', config("yaffet.currency_codes")[$request->input('currency')])->latest()->first();
             $user = User::where('deviceToken', $request->input('user_deviceToken'))->first();
-                if (empty($curr)||empty($metal->metalPrice)) {
-                    $this->returnData('price', "error", "There is table empty", '404');
-                }
-                if (empty($user)) {
-                    $this->returnData('price', "error", "the user_deviceToken is not in user token", '404');
+
+                if ( empty($curr)||empty($metal->metalPrice) || empty($user) )
+                {
+                    $this->returnData('price', "error", "There is input empty", '404');
                 }
 
             $type = 'less';
             if ($request->input('price') > $metal->metalPrice * $curr['price_rate']) {
                 $type = 'greater';
-
             }
-            $alert = Alert::create([
+             Alert::create([
                 'price' => $request->input('price'),
                 'metalName' => $request->input('metalName'),
                 'currency' => $request->input('currency'),
                 'type' => $type,
                 'user_id' => $user->id,
             ]);
-            return $this->returnSuccessMessage('done', '201');
+            return $this->returnSuccessMessage('price saved', '201');
 
         }
-
 
     }
 

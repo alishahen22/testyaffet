@@ -74,6 +74,7 @@ class AdminController extends Controller
                 $metal->metalName = $metalcode;
                 $metal->save();
             }
+            return $this->returnSuccessMessage('Metals saved successfully','201');
         }
         else
         {
@@ -83,20 +84,18 @@ class AdminController extends Controller
     }
 
 
-
+    // handle notification by using queue
     public function handleSendNotification()
     {
                 $metals = Alert::chunk(50,function ($alerts)
                 {
                     dispatch(new SendNotificationJob($alerts));
-                    return "done";
                 });
     }
 
 
-    // call prices for all countries
 
-
+    // call prices for all countries ( currency )
     public function saveLastCurrency()
     {
 
@@ -105,7 +104,6 @@ class AdminController extends Controller
 
         if($manage['success'])
         {
-
             foreach($manage['quotes'] as $key => $value)
             {
                 Currency::create([

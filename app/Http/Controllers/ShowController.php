@@ -10,7 +10,6 @@ use Illuminate\Support\Facades\DB;
 
 class ShowController extends Controller
 {
-
     use GeneralTrait ;
 
 
@@ -20,6 +19,7 @@ class ShowController extends Controller
         $metals = Metal::select('metalName','metalPrice','date')->latest()->take(3)->get();
         return ($metals);
     }
+
 
 
     // get historical price for all metals
@@ -32,18 +32,32 @@ class ShowController extends Controller
         $code = config('yaffet.metal_codes')[$metalName];
 
         $result = Metal::where('metalName',$code)->get();
-        return $this->returnData($metalName,$result,'There are all Prices of '.$metalName.' for a period time','201');
+        if ($result)
+        {
+            return $this->returnData($metalName,$result,'There are all Prices of '.$metalName.' for a period time','201');
+        }
+        else
+        {
+            return $this->returnError('404','there is no metals');
+        }
 
     }
 
 
 
-
-public function getLastCurrency()
-{
-   $lastCurrency =  Currency::select('currency_code','price_rate')->latest()->get()->unique('currency_code');
-   return $lastCurrency;
-}
+    // get last price for different currency
+    public function getLastCurrency()
+    {
+       $lastCurrency =  Currency::select('currency_code','price_rate')->latest()->get()->unique('currency_code');
+       if ($lastCurrency)
+       {
+           return $lastCurrency;
+       }
+       else
+       {
+           return 'there is no different currency' ;
+       }
+    }
 
 
 
